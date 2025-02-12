@@ -1,18 +1,15 @@
 import * as React from "react";
 import moment from "moment";
 import { onSnapshot, doc } from "firebase/firestore";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import MuiCard from "@mui/material/Card";
-import { styled } from "@mui/material/styles";
 
-import Modal from "@mui/material/Modal";
-import CardContent from "@mui/material/CardContent";
+import { Box, Typography, Modal, CardContent } from "@mui/material";
+import MuiCard from "@mui/material/Card";
+import CloseIcon from "@mui/icons-material/Close";
+import { styled } from "@mui/material/styles";
 
 import { db } from "../../config/fbconfig";
 import { CardHeader, Divider, Grid2 as Grid, IconButton } from "@mui/material";
 import { TodoCategories } from "./utility";
-import CloseIcon from "@mui/icons-material/Close";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   position: "absolute",

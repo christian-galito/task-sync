@@ -20,11 +20,11 @@ const NotificationSlice = createSlice({
     builder.addCase(
       createTodoNotificationAsync.fulfilled,
       (state, action) => {
-        console.log("Successfully added todo notification.", action.payload);
+        return state;
       },
       createNewUserNotificationAsync.fulfilled,
       (state, action) => {
-        console.log("Successfully added user notification.", action.payload);
+        return state;
       }
     );
   },

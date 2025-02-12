@@ -1,4 +1,6 @@
 import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import {
   Box,
@@ -13,10 +15,7 @@ import {
   Stack,
 } from "@mui/material";
 import MuiCard from "@mui/material/Card";
-
 import { styled } from "@mui/material/styles";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../config/AuthContext";
 import { signUpAsync } from "./redux/asyncActions";
@@ -69,6 +68,7 @@ export default function SignUp(props) {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const errorMessage = useSelector((state) => state.auth.errorMessage);
 
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
@@ -78,6 +78,13 @@ export default function SignUp(props) {
   const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState("");
   const [lastNameError, setLastNameError] = React.useState(false);
   const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState("");
+
+  React.useEffect(() => {
+    if (errorMessage) {
+      setEmailError(true);
+      setEmailErrorMessage(errorMessage);
+    }
+  }, [errorMessage]);
 
   React.useEffect(() => {
     if (user) {
@@ -122,7 +129,7 @@ export default function SignUp(props) {
 
     if (!lastName.value || lastName.value.length < 1) {
       setLastNameError(true);
-      setLastNameErrorMessage("First Name is required.");
+      setLastNameErrorMessage("Last Name is required.");
       isValid = false;
     } else {
       setLastNameError(false);
@@ -149,11 +156,13 @@ export default function SignUp(props) {
         navigate,
       })
     ).then((resp) => {
-      dispatch(
-        createNewUserNotificationAsync(
-          `${resp.payload.firstName} ${resp.payload.lastName}`
-        )
-      );
+      if (resp?.payload) {
+        dispatch(
+          createNewUserNotificationAsync(
+            `${resp.payload.firstName} ${resp.payload.lastName}`
+          )
+        );
+      }
     });
   };
 
@@ -213,7 +222,7 @@ export default function SignUp(props) {
                 autoComplete="email"
                 variant="outlined"
                 error={emailError}
-                helperText={emailErrorMessage}
+                helperText={emailErrorMessage ?? errorMessage}
                 color={passwordError ? "error" : "primary"}
               />
             </FormControl>
@@ -248,7 +257,11 @@ export default function SignUp(props) {
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Typography sx={{ textAlign: "center" }}>
               Already have an account?{" "}
-              <Link href="/signin" variant="body2" sx={{ alignSelf: "center" }}>
+              <Link
+                href="/signin"
+                variant="body2"
+                sx={{ alignSelf: "center", textDecoration: "none" }}
+              >
                 Sign in
               </Link>
             </Typography>

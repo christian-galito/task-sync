@@ -1,12 +1,12 @@
 import React from "react";
-import TodoList from "../todo/TodoList";
-import NotificationList from "./notification/NotificationList";
-import MobileNotificationContainer from "./notification/MobileNotificationContainer";
-import { Container, Grid2 as Grid, Paper } from "@mui/material";
-import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
-import "./Dashboard.css";
 import { useDispatch } from "react-redux";
+
+import { Button, Container, Grid2 as Grid, Paper } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+
+import TodoList from "../todo/TodoList";
+import { MobileNotificationContainer, NotificationList } from "./notification";
+import "./Dashboard.css";
 
 import { setSelectedTodo } from "../todo/redux/TodoSlice";
 

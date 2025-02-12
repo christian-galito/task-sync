@@ -1,12 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./fbconfig"; // Ensure the correct path to your Firebase config
+import { auth } from "./fbconfig";
+
 import LoadingScreen from "../components/shared/loading/LoadingScreen";
 
-// Create context
 const AuthContext = createContext();
 
-// Auth Provider Component
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,7 +16,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     });
 
-    return () => unsubscribe(); // Cleanup the listener on unmount
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -27,5 +26,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use auth
 export const useAuth = () => useContext(AuthContext);

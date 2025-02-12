@@ -25,29 +25,26 @@ const TodoSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createTodoAsync.fulfilled, (state, action) => {
-        console.log("Successfully added todo.", action.payload);
+        return state;
       })
       .addCase(createTodoAsync.rejected, (state, action) => {
-        console.log("create rejected", action.payload);
+        return state;
       })
       .addCase(updateTodoAsync.fulfilled, (state, action) => {
-        console.log("Successfully updated todo.", action.payload);
+        return state;
       })
       .addCase(updateTodoAsync.rejected, (state, action) => {
-        console.log("update rejected", action.payload);
+        return state;
       })
       .addCase(deleteTodoAsync.pending, (state) => {
-        console.log("delete pending");
-        state.loading = true;
+        return state;
       })
       .addCase(deleteTodoAsync.fulfilled, (state, action) => {
-        console.log("delete fulfilled");
-        state.loading = false;
+        return state;
       })
       .addCase(deleteTodoAsync.rejected, (state, action) => {
-        console.log("delete rejected", action.payload);
-        state.loading = false;
         state.error = action.payload;
+        return state;
       });
   },
 });

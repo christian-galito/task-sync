@@ -1,32 +1,34 @@
 import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route } from "react-router-dom";
+
+import { createTheme, ThemeProvider } from "@mui/material";
 
 import NavigationBar from "./components/navigation/NavigationBar";
 import Dashboard from "./components/dashboard/Dashboard";
-import "./App.css";
-
 import SignIn from "./components/auth/SignIn";
 import SignUp from "./components/auth/SignUp";
-
-import { useAuth } from "./config/AuthContext";
+import ErrorPage from "./components/errorPage/ErrorPage";
+import ProtectedRoute from "./components/shared/ProtectedRoute/ProtectedRoute";
+import { getAuthenticatedUserAsync } from "./components/auth/redux/asyncActions";
 import {
   setAuthenticated,
   setAuthenticatedUser,
 } from "./components/auth/redux/AuthSlice";
-import { useDispatch, useSelector } from "react-redux";
-import ProtectedRoute from "./components/shared/ProtectedRoute/ProtectedRoute";
-import { getAuthenticatedUserAsync } from "./components/auth/redux/asyncActions";
 
-import { createTheme, ThemeProvider } from "@mui/material";
+import "./App.css";
+import { useAuth } from "./config/AuthContext";
+
+import { ConfirmDialog, SnackBar } from "./components/shared";
 
 const theme = createTheme({
   components: {
     MuiContainer: {
       styleOverrides: {
         root: ({ theme }) => ({
-          padding: theme.spacing(2), // Default padding
+          padding: theme.spacing(2),
           [theme.breakpoints.down("sm")]: {
-            padding: theme.spacing(0.5), // Smaller padding for small screens
+            padding: theme.spacing(0.5),
           },
         }),
       },
@@ -97,9 +99,13 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/" Component={SignIn} />
         <Route path="/signin" Component={SignIn} />
         <Route path="/signup" Component={SignUp} />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
+      <SnackBar />
+      <ConfirmDialog />
     </ThemeProvider>
   );
 }

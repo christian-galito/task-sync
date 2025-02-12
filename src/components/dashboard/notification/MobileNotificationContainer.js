@@ -1,14 +1,18 @@
 import * as React from "react";
+import { useSelector } from "react-redux";
+
 import { Global } from "@emotion/react";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { grey } from "@mui/material/colors";
-import Typography from "@mui/material/Typography";
-import SwipeableDrawer from "@mui/material/SwipeableDrawer";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useSelector } from "react-redux";
-import { Divider, Box, Skeleton } from "@mui/material";
+import {
+  Divider,
+  Box,
+  Skeleton,
+  SwipeableDrawer,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 
 import NotificationContainer from "./NotificationContainer";
 
@@ -40,7 +44,6 @@ const Puller = styled("div")(({ theme }) => ({
 }));
 
 function MobileNotificationContainer(props) {
-  const { window } = props;
   const [open, setOpen] = React.useState(false);
 
   const notifications = useSelector(
@@ -54,10 +57,6 @@ function MobileNotificationContainer(props) {
   const theme = useTheme();
   const mediumScreen = useMediaQuery(theme.breakpoints.down("lg"));
 
-  // This is used only for the example
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
-
   return (
     <Root>
       <CssBaseline />
@@ -70,7 +69,6 @@ function MobileNotificationContainer(props) {
         }}
       />
       <SwipeableDrawer
-        container={container}
         anchor="bottom"
         open={open}
         onClose={toggleDrawer(false)}

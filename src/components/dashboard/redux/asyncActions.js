@@ -1,43 +1,45 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
 import { collection, addDoc } from "firebase/firestore";
 
 import { db } from "../../../config/fbconfig";
 
 export const createNewUserNotificationAsync = createAsyncThunk(
   "counter/createNewUserNotificationAsync",
-  async (user) => {
-    const newNotification = {
-      user: user,
-      content: "joined the party.",
-      createdDate: new Date(),
-    };
+  async (user, { rejectWithValue }) => {
+    try {
+      const newNotification = {
+        user: user,
+        content: "joined the party.",
+        createdDate: new Date(),
+      };
 
-    return addDoc(collection(db, "notifications"), newNotification)
-      .then((docRef) => {
-        return true;
-      })
-      .catch((err) => console.log("Error: ", err));
+      await addDoc(collection(db, "notifications"), newNotification);
+
+      return true;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const createTodoNotificationAsync = createAsyncThunk(
   "counter/createTodoNotificationAsync",
-  async (payload, thunkAPI) => {
-    const state = thunkAPI.getState();
+  async (payload, { getState, rejectWithValue }) => {
+    try {
+      const state = getState();
 
-    const user = state.auth.authenticatedUser;
+      const user = state.auth.authenticatedUser;
 
-    const newNotification = {
-      user: `${user.firstName} ${user.lastName}`,
-      content: `${payload.action} ${payload.title}.`,
-      createdDate: new Date(),
-    };
+      const newNotification = {
+        user: `${user.firstName} ${user.lastName}`,
+        content: `${payload.action} ${payload.title}.`,
+        createdDate: new Date(),
+      };
 
-    return addDoc(collection(db, "notifications"), newNotification)
-      .then((docRef) => {
-        return true;
-      })
-      .catch((err) => console.log("Error: ", err));
+      await addDoc(collection(db, "notifications"), newNotification);
+      return true;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );

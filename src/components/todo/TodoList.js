@@ -1,6 +1,7 @@
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import TodoContainer from "./TodoContainer";
 import TodoAddModal from "./TodoAddModal";
 
@@ -8,7 +9,7 @@ import { db } from "../../config/fbconfig";
 import { setTodos, setSelectedTodo } from "./redux/TodoSlice";
 import TodoDetailsModal from "./TodoDetailsModal";
 
-import "./TodoList.css";
+import { Box, Skeleton } from "@mui/material";
 
 function TodoList(props) {
   const { openAddModal, setOpenAddModal, handleClose } = props;
@@ -16,6 +17,7 @@ function TodoList(props) {
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos.todos);
   const [openDetailsModal, setOpenDetailsModal] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
 
   const selectedTodo = useSelector((state) => state.todos.selectedTodo);
 
@@ -32,11 +34,11 @@ function TodoList(props) {
             lastUpdatedDate: doc.data().lastUpdatedDate?.toDate().toISOString(),
           });
         });
+        setLoading(false);
         dispatch(setTodos(records));
       }
     );
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, [dispatch]);
 
@@ -57,15 +59,25 @@ function TodoList(props) {
 
   return (
     <>
-      {todos &&
-        todos.map((todo) => (
-          <TodoContainer
-            todo={todo}
-            key={todo.todoId}
-            handleOpenTodoDetails={handleOpenTodoDetails}
-            handleUpdateTodoDetails={handleUpdateTodoDetails}
-          />
-        ))}
+      {loading
+        ? [1, 2, 3, 4].map((id) => (
+            <Box p={1} key={id}>
+              <Skeleton
+                variant="rectangular"
+                width="100%"
+                height={120}
+              ></Skeleton>
+            </Box>
+          ))
+        : todos &&
+          todos.map((todo) => (
+            <TodoContainer
+              todo={todo}
+              key={todo.todoId}
+              handleOpenTodoDetails={handleOpenTodoDetails}
+              handleUpdateTodoDetails={handleUpdateTodoDetails}
+            />
+          ))}
       <TodoAddModal open={openAddModal} handleClose={handleClose} />
       <TodoDetailsModal
         open={openDetailsModal}

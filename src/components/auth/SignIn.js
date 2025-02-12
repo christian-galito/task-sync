@@ -1,12 +1,13 @@
 import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import {
   Box,
   Button,
-  Checkbox,
+  // Checkbox,
   CssBaseline,
-  FormControlLabel,
+  // FormControlLabel,
   FormControl,
   FormLabel,
   Link,
@@ -15,9 +16,7 @@ import {
   Stack,
 } from "@mui/material";
 import MuiCard from "@mui/material/Card";
-
 import { styled } from "@mui/material/styles";
-import { useDispatch } from "react-redux";
 
 import { signInAsync } from "./redux/asyncActions";
 import { useAuth } from "../../config/AuthContext";
@@ -69,6 +68,8 @@ export default function SignIn(props) {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const errorMessage = useSelector((state) => state.auth.errorMessage);
+
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
@@ -177,10 +178,17 @@ export default function SignIn(props) {
                 color={passwordError ? "error" : "primary"}
               />
             </FormControl>
-            <FormControlLabel
+            <Box display="flex" justifyContent="center">
+              {errorMessage && (
+                <Typography variant="body2" color="error">
+                  {errorMessage}
+                </Typography>
+              )}
+            </Box>
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth
@@ -194,7 +202,11 @@ export default function SignIn(props) {
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Typography sx={{ textAlign: "center" }}>
               Don&apos;t have an account?{" "}
-              <Link href="/signup" variant="body2" sx={{ alignSelf: "center" }}>
+              <Link
+                href="/signup"
+                variant="body2"
+                sx={{ alignSelf: "center", textDecoration: "none" }}
+              >
                 Sign up
               </Link>
             </Typography>

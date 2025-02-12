@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   Box,
@@ -14,10 +15,8 @@ import {
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 
-import { useDispatch, useSelector } from "react-redux";
-
-import { createTodoAsync, updateTodoAsync } from "./redux/asyncActions";
 import { createTodoNotificationAsync } from "../dashboard/redux/asyncActions";
+import { createTodoAsync, updateTodoAsync } from "./redux/asyncActions";
 import { TodoCategories } from "./utility";
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -74,12 +73,14 @@ export default function TodoAddModal(props) {
       action: selectedTodo ? "updated" : "added",
     };
 
-    selectedTodo
-      ? dispatch(
-          updateTodoAsync({ ...formValues, todoId: selectedTodo.todoId })
-        )
-      : dispatch(createTodoAsync(formValues));
-    dispatch(createTodoNotificationAsync(formValues));
+    Promise.all([
+      selectedTodo
+        ? dispatch(
+            updateTodoAsync({ ...formValues, todoId: selectedTodo.todoId })
+          )
+        : dispatch(createTodoAsync(formValues)),
+      dispatch(createTodoNotificationAsync(formValues)),
+    ]);
     handleClose();
   };
 

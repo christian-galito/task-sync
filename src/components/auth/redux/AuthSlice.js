@@ -8,6 +8,7 @@ import {
 const initialState = {
   authenticated: false,
   authenticatedUser: null,
+  errorMessage: "",
 };
 
 const AuthSlice = createSlice({
@@ -26,13 +27,19 @@ const AuthSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(signInAsync.rejected, (state, action) => {
-        console.log("Error: ", action.payload);
+        state.errorMessage = action.payload;
         return state;
       })
       .addCase(signInAsync.fulfilled, (state) => {
+        state.errorMessage = "";
         return state;
       })
       .addCase(signUpAsync.fulfilled, (state, action) => {
+        state.errorMessage = "";
+        return state;
+      })
+      .addCase(signUpAsync.rejected, (state, action) => {
+        state.errorMessage = action.payload;
         return state;
       })
       .addCase(getAuthenticatedUserAsync.fulfilled, (state, action) => {
